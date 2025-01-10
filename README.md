@@ -303,19 +303,4 @@ Don't forget to give the project a star! Thanks again!
     Your time and attention mean the world! ✨
 </div>
 
-<style>
-    @keyframes bounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
-
-    @keyframes fadeIn {
-        0% { opacity: 0; }
-        100% { opacity: 1; }
-    }
-
-    @keyframes slideIn {
-        0% { transform: translateX(-100%); }
-        100% { transform: translateX(0); }
-    }
-</style>
+ 
