@@ -119,7 +119,7 @@
                                 <div class="score">
                                     ${match.status !== 'Upcoming' && match.teams[0].team_score !== 'Yet to Bat' ? `${match.teams[0].team_score}` : ''}
                                 </div>
-                                ${match.status !== 'Upcoming' && match.teams[0].team_score === 'Yet to Bat' ? `<div class="team-overs">(${match.teams[0].total_overs} overs)</div>` : ''}
+                                ${match.status !== 'Upcoming' && match.teams[0].team_score !== 'Yet to Bat'    ? `<div class="team-overs">(${match.teams[0].total_overs} overs)</div>` : ''}
                             </div>
                             <div class="match-status ${match.status === 'Upcoming' ? 'live-info' : ''}">
                                 ${match.status === 'Upcoming' ? match.status : match.result}
@@ -133,7 +133,7 @@
                                 <div class="score">
                                     ${match.status !== 'Upcoming' && match.teams[1].team_score !== 'Yet to Bat' ? `${match.teams[1].team_score}` : ''}
                                 </div>
-                                ${match.status !== 'Upcoming' && match.teams[1].team_score === 'Yet to Bat' ? `<div class="team-overs">(${match.teams[1].total_overs} overs)</div>` : ''}
+                                ${match.status !== 'Upcoming' && match.teams[1].team_score !== 'Yet to Bat'  ? `<div class="team-overs">(${match.teams[1].total_overs} overs)</div>` : ''}
                             </div>
                         </div>`;
 
@@ -144,7 +144,7 @@
 
                 matchHTML += `
                         <div class="match-reason">
-                            <div>Reason: ${match.reason}</div>
+                            <div>  ${match.reason}</div>
                         </div>
                         <a href="${match.scoreboard_url}" class="btn btn-primary mt-3">View Scoreboard</a>
                     </div>

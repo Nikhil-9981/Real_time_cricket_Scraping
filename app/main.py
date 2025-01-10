@@ -19,8 +19,6 @@ app = FastAPI()
 # Global variables to store WebDriver and extracted data
 driver = None
 extracted_data = []
-current_page = 1  # Track the current page number
-
 @app.on_event("shutdown")
 def shutdown_event():
     global driver
@@ -153,6 +151,8 @@ def click_pagination_button(button_class):
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "date-wise-wrap")))  # Wait until page content is loaded
     except Exception as e:
         print(f"Error clicking '{button_class}' button: {e}")
+
+# Initialize the WebDriver
 driver = init_driver()
 driver.get("https://crex.live/fixtures/match-list")
 WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "date-wise-wrap")))
@@ -167,53 +167,39 @@ def click_next_button():
 
 def click_previous_button():
     try:
-        previous_button_class =  ".previous-button"
+        previous_button_class =  ".prev-button"
         click_pagination_button(previous_button_class)
         print("Moved to the previous page.")
     except Exception as e:
         print(f"Error clicking previous button: {e}")
 
 # FastAPI endpoint to start match data extraction
-# @app.get("/extract_match_data")
-# async def extract_match_data(background_tasks: BackgroundTasks):
-#     global extracted_data
-#     extracted_data = []  # Clear previous data
-#     driver = init_driver()
-#     driver.get("https://crex.live/fixtures/match-list")
-#     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "date-wise-wrap")))
-#     background_tasks.add_task(extract_matches_on_page, driver)
-#     return {"message": "Match data extraction started in the background."}
+ 
 
 # FastAPI endpoint to get the current page's match data
 @app.get("/get_extracted")
-async def get_extracted(background_tasks: BackgroundTasks):
+async def get_extracted():
     global extracted_data
-    extracted_data = []  # Clear previous data
 
-    extracted_data.append(extract_matches_on_page(driver))
-    return {"match_details": extracted_data, "current_page": current_page}
+    extracted_data = []  # Clear previous data
+    extracted_data.append(extract_matches_on_page(driver))  # Extract data for the current page
+    return {"match_details": extracted_data }
 
 # FastAPI endpoint to go to the next page
 @app.get("/next_page")
 async def next_page(background_tasks: BackgroundTasks):
-    global current_page
-    current_page += 1  # Update the current page number
 
     click_next_button()  # Navigate to the next page
 
-    return {"message": "Moved to the next page.", "current_page": current_page}
+    return {"message": "Moved to the next page." }
 
 # FastAPI endpoint to go to the previous page
 @app.get("/previous_page")
 async def previous_page(background_tasks: BackgroundTasks):
-    global current_page
-    # if current_page > 1:
-    # current_page -= 1  # Update the current page number
+
     click_previous_button()  # Navigate to the previous page
 
-    return {"message": "Moved to the previous page.", "current_page": current_page}
-    # else:
-    #     return {"message": "Already on the first page.", "current_page": current_page}
+    return {"message": "Moved to the previous page." }
 
 # Mount static files and templates
 app.mount("/static", StaticFiles(directory="static"), name="static")
