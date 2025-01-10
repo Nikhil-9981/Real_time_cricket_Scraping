@@ -1,0 +1,70 @@
+/* General body and header styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Match container styling */
+.match-container {
+    margin: 20px;
+}
+
+/* Individual match card styling */
+.match-card {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+
+/* Header within each match card */
+.match-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Styling for the match details section */
+.match-details {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* Styling for navigation buttons */
+.nav-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    margin: 5px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+/* Styling for the loading message */
+.loading {
+    text-align: center;
+    font-size: 18px;
+    color: #007BFF;
+}

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Match Data</title>
+    <!-- Bootstrap CDN for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .match-card {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .team-logo {
+            width: 40px;
+            height: 40px;
+        }
+        .match-status {
+            font-weight: bold;
+        }
+        .live-info {
+            color: red;
+            font-weight: bold;
+        }
+        .match-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .team-info {
+            text-align: center;
+        }
+        .team-name {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .score {
+            font-size: 1.1em;
+            margin-top: 5px;
+        }
+        .team-overs {
+            font-size: 0.9em;
+            color: gray;
+        }
+        .time {
+            font-size: 1.1em;
+            color: gray;
+        }
+        .date-heading {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<header class="bg-success text-white text-center p-3">
+    <h1>Live Match Data</h1>
+</header>
+
+<div class="container my-5">
+    <div class="row" id="matches-container">
+        <!-- Matches will be inserted here dynamically -->
+    </div>
+
+    <!-- Navigation buttons -->
+    <div class="d-flex justify-content-center mt-4">
+        <button class="btn btn-success mx-2" id="prevBtn">Previous</button>
+        <button class="btn btn-success mx-2" id="nextBtn">Next</button>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    //let currentPage = 1;
+
+    // Function to fetch match data from the backend
+    async function fetchMatchData() {
+        const response = await fetch(`/get_extracted`);
+        const data = await response.json();
+        const matchDetails = data.match_details;
+        const container = document.getElementById('matches-container');
+        container.innerHTML = ''; // Clear previous content
+
+        if (matchDetails.length === 0) {
+            container.innerHTML = "<p>No match data available.</p>";
+            return;
+        }
+
+        matchDetails.forEach(item => {
+            // Create a container for each date
+            const dateContainer = document.createElement('div');
+            dateContainer.classList.add('col-12');
+
+            // Create a heading for the date
+            const dateHeading = document.createElement('div');
+            dateHeading.classList.add('date-heading');
+            dateHeading.textContent = item.date;
+            dateContainer.appendChild(dateHeading);
+
+            // Loop through each match for the current date
+            item.matches.forEach(match => {
+                const matchCard = document.createElement('div');
+                matchCard.classList.add('card', 'match-card');
+                let matchHTML = `
+                    <div class="card-body">
+                        <div class="match-details">
+                            <div class="team-info">
+                                <img src="${match.teams[0].team_logo_url}" class="team-logo" alt="${match.teams[0].team_name}">
+                                <div>
+                                    <span class="team-name">${match.teams[0].team_name}</span>
+                                </div>
+                                <!-- Displaying score and overs only if not upcoming or if the team is not "Yet to Bat" -->
+                                <div class="score">
+                                    ${match.status !== 'Upcoming' && match.teams[0].team_score !== 'Yet to Bat' ? `${match.teams[0].team_score}` : ''}
+                                </div>
+                                ${match.status !== 'Upcoming' && match.teams[0].team_score === 'Yet to Bat' ? `<div class="team-overs">(${match.teams[0].total_overs} overs)</div>` : ''}
+                            </div>
+                            <div class="match-status ${match.status === 'Upcoming' ? 'live-info' : ''}">
+                                ${match.status === 'Upcoming' ? match.status : match.result}
+                            </div>
+                            <div class="team-info">
+                                <img src="${match.teams[1].team_logo_url}" class="team-logo" alt="${match.teams[1].team_name}">
+                                <div>
+                                    <span class="team-name">${match.teams[1].team_name}</span>
+                                </div>
+                                <!-- Displaying score and overs only if not upcoming or if the team is not "Yet to Bat" -->
+                                <div class="score">
+                                    ${match.status !== 'Upcoming' && match.teams[1].team_score !== 'Yet to Bat' ? `${match.teams[1].team_score}` : ''}
+                                </div>
+                                ${match.status !== 'Upcoming' && match.teams[1].team_score === 'Yet to Bat' ? `<div class="team-overs">(${match.teams[1].total_overs} overs)</div>` : ''}
+                            </div>
+                        </div>`;
+
+                // Show start time only for upcoming matches
+                if (match.status === 'Upcoming') {
+                    matchHTML += `<div class="time">Start Time: ${match.start_time}</div>`;
+                }
+
+                matchHTML += `
+                        <div class="match-reason">
+                            <div>Reason: ${match.reason}</div>
+                        </div>
+                        <a href="${match.scoreboard_url}" class="btn btn-primary mt-3">View Scoreboard</a>
+                    </div>
+                `;
+
+                matchCard.innerHTML = matchHTML;
+                dateContainer.appendChild(matchCard);
+            });
+
+            // Append the date container to the main container
+            container.appendChild(dateContainer);
+        });
+    }
+
+    // Function to go to the next page
+    async function nextPage() {
+        const response = await fetch(`/next_page`);
+        const data = await response.json();
+        //currentPage = data.current_page;
+        fetchMatchData(); // Refresh match data after page change
+    }
+
+    // Function to go to the previous page
+    async function previousPage() {
+        const response = await fetch(`/previous_page`);
+        const data = await response.json();
+       // currentPage = data.current_page;
+        fetchMatchData(); // Refresh match data after page change
+    }
+
+    // Event listeners for navigation buttons
+    document.getElementById('nextBtn').addEventListener('click', nextPage);
+    document.getElementById('prevBtn').addEventListener('click', previousPage);
+
+    // Initial fetch to load match data when the page loads
+    fetchMatchData();
+</script>
+
+</body>
+</html>
