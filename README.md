@@ -78,7 +78,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
- - ** The deployed website is currently facing some issues and is not functioning properly, but it is running fine locally. Please consider this as I was unable to complete the deployment due 
+ - **The deployed website is currently facing some issues and is not functioning properly, but it is running fine locally. Please consider this as I was unable to complete the deployment due 
   to time constraints, though I am actively working on resolving it**
 
   This application automates the process of gathering cricket match information from a website. It allows users to view details about matches, navigate between pages of match listings, and display the collected information through a user-friendly web interface.
