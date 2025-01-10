@@ -286,8 +286,7 @@ Don't forget to give the project a star! Thanks again!
     Nikhil Kumar Singh<br>
     <a href="https://www.linkedin.com/in/nikhil9981/" style="color: #4CAF50; text-decoration: none; font-weight: bold;">@nikhil9981</a><br>
     <a href="mailto:rathaurnikhil14@gmail.com" style="color: #4CAF50; text-decoration: none; font-weight: bold;">rathaurnikhil14@gmail.com</a><br><br>
-    Project Link:
-    <a href="https://github.com/Nikhil-9981/AI_Agent_for_CSV_files" style="color: #FF6347; font-weight: bold; text-decoration: none;">AI Agent for CSV Files</a>
+    
 </div>
 
 <p align="right" style="font-size: 18px; color: #4CAF50;">
